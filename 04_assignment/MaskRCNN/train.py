@@ -9,7 +9,7 @@ num_classes = 4 # 0 for backgroud
  
 model = utils.get_instance_segmentation_model(num_classes).double()
 
-model.load_state_dict(torch.load(r'your_path\intro2cv_maskrcnn_pretrained.pth',map_location='cpu'))
+model.load_state_dict(torch.load(r'/Users/wangyiyang/code/Intro2CV/04_assignment/intro2cv_maskrcnn_pretrained.pth',map_location='cpu'))
 
 dataset = ShapeDataset(10)
 
@@ -27,7 +27,7 @@ lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer,
                                                step_size=3,
                                                gamma=0.1)
 
-num_epochs = 3
+num_epochs = 30
 device = torch.device('cpu')
 
 

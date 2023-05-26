@@ -70,7 +70,7 @@ def plot_save_output(path, imgs, output):
     plt.imshow(imgs.permute(1,2,0).detach().numpy().astype(np.uint8))
 
     plt.subplot(1 ,2 ,2)
-    plt.title("Mask"+str(scores[0]))
+    plt.title("Mask"+str(scores[0])+',label:'+str(labels[0].detach().numpy()))
     plt.axis("off")
     plt.imshow(masks[0,:,:,0])
 

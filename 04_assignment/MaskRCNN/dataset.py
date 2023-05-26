@@ -163,15 +163,18 @@ class ShapeDataset(torch.utils.data.Dataset):
         current_mask = np.zeros((self.h, self.w))  
         img_shape_info = []
         
+        # shapes with smaller index should be drawn on top of the ones with larger index
+        # so the drawing process is defered after the loop
         for i in range(n_shapes):
             while 1: # keep drawing shapes until overlap is small enough
                 masks[i, :] = 0
                 y,x,s,color = self.rand_draw_shape(masks[i,:], shape_codes[i])
                 if i == 0:
+                    # record the shape information for it should be drawn on top of the later ones
                     img_shape_info.append([shape_codes[i],y,x,s,color])
+                    # update the current mask to the whole union area
                     current_mask = masks[i,:]
-                    break
-                else: # perform non-maximum suppression
+                else: # check overlap of the current shape with all the previous ones
                     remove_threshold = 0.5
                     current_shape_area = np.sum(masks[i,:])
                     # cut out the intersection area from the original mask
@@ -180,23 +183,19 @@ class ShapeDataset(torch.utils.data.Dataset):
 
                     if remaining_shape_percentage < remove_threshold: # if the remaining shape is too small, ignore it
                         continue
-                    else: # otherwise, keep it
-                        # record the shape information for it should be drawn on top of the later ones
-                        img_shape_info.append([shape_codes[i],y,x,s,color])
+                    img_shape_info.append([shape_codes[i],y,x,s,color])
+                    current_mask = np.logical_or(current_mask, masks[i,:])
 
-                        # update the current mask to the whole union area
-                        current_mask = np.logical_or(current_mask, masks[i,:])
+                # set the bounding box
+                pos = np.where(masks[i])
+                xmin = np.min(pos[1])
+                xmax = np.max(pos[1])
+                ymin = np.min(pos[0])
+                ymax = np.max(pos[0])
+                boxes[i,:] = np.asarray([xmin, ymin, xmax, ymax])
+                break
 
-                        # set the bounding box
-                        pos = np.where(masks[i])
-                        xmin = np.min(pos[1])
-                        xmax = np.max(pos[1])
-                        ymin = np.min(pos[0])
-                        ymax = np.max(pos[0])
-                        boxes[i,:] = np.asarray([xmin, ymin, xmax, ymax])
-                        break
-
-        # draw the shapes on the image
+        # draw the shapes on the image in a reverse order
         for shape_info in reversed(img_shape_info):
             self.fix_draw_shape(img, shape_info[0], shape_info[1], shape_info[2], shape_info[3], shape_info[4])
 
@@ -232,7 +231,8 @@ if __name__ == '__main__':
     path = "results/" 
 
     for i in range(10):
+        print(i)
         imgs, labels = dataset[i]
-        # print(labels)
-        plot_save_dataset(path+str(i)+"_data.png", imgs, labels)
+        print(labels)
+        # plot_save_dataset(path+str(i)+"_data.png", imgs, labels)
 
