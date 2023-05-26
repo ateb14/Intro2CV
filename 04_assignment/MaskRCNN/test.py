@@ -55,7 +55,7 @@ def compute_segmentation_ap(output_list, gt_labels_list, iou_threshold=0.5):
                 
         # sort pred_objs by confidence
         pred_objs.sort(key=lambda x : x['confidence'], reverse=True)
-        
+
         # compute TP and FP of different confidence threshold
         TP_recall, TP_precision = 0, 0
         recall_set = set()
@@ -84,12 +84,6 @@ def compute_segmentation_ap(output_list, gt_labels_list, iou_threshold=0.5):
         y = np.interp(x, recalls, precisions)
         ap = np.mean(y)
         aps.append(ap)
-        # plot precision-recall curve
-        plt.plot(recalls, precisions, label='class {} AP = {:.3f}'.format(cls, ap))
-        plt.xlabel('Recall')
-        plt.ylabel('Precision')
-        plt.legend()
-        plt.savefig('results/precision_recall_curve_seg' + str(cls) + '.png')
                         
     mAP_segmentation = np.mean(aps)
 
@@ -176,12 +170,6 @@ def compute_detection_ap(output_list, gt_labels_list, iou_threshold=0.5):
         y = np.interp(x, recalls, precisions)
         ap = np.mean(y)
         aps.append(ap)
-        # plot precision-recall curve
-        plt.plot(recalls, precisions, label='class {} AP = {:.3f}'.format(cls, ap))
-        plt.xlabel('Recall')
-        plt.ylabel('Precision')
-        plt.legend()
-        plt.savefig('results/precision_recall_curve' + str(cls) + '.png')
                         
     mAP_detection = np.mean(aps)
     return mAP_detection
@@ -216,17 +204,18 @@ path = "results/"
 # for i in range(10):
 #     imgs, labels = dataset_test[i]
 #     output = model([imgs])
-#     plot_save_output(path+str(i)+"_result.png", imgs, output[0])
+    # plot_save_output(path+str(i)+"_result.png", imgs, output[0])
 
 # compute AP
 gt_labels_list = []
 output_label_list = []
 with torch.no_grad():
-    for i in range(20):
+    for i in range(10):
         print(i)
         imgs, labels = dataset_test[i]
         gt_labels_list.append(labels)
         output = model([imgs])
+        plot_save_output(path+str(i)+"_result.png", imgs, output[0])
         output_label_list.append(output[0])
 
 mAP_detection = compute_detection_ap(output_label_list, gt_labels_list)

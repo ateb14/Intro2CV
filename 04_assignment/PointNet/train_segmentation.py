@@ -51,12 +51,13 @@ if __name__ == '__main__':
     classifier = PointNetSeg(k=num_classes)
 
 
-    optimizer = optim.Adam(classifier.parameters(), lr=0.001, betas=(0.9, 0.999))
+    optimizer = optim.Adam(classifier.parameters(), lr=0.0005, betas=(0.9, 0.999))
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.5)
 
     num_batch = len(dataset) / opt.batchSize
     count =0
-    for epoch in range(opt.nepoch):
+    # for epoch in range(opt.nepoch):
+    for epoch in range(4):
         
         for i, data in enumerate(dataloader, 0):
             points, target = data

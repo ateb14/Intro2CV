@@ -27,7 +27,7 @@ lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer,
                                                step_size=3,
                                                gamma=0.1)
 
-num_epochs = 30
+num_epochs = 3
 device = torch.device('cpu')
 
 

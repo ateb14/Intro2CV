@@ -175,7 +175,7 @@ class ShapeDataset(torch.utils.data.Dataset):
                     # update the current mask to the whole union area
                     current_mask = masks[i,:]
                 else: # check overlap of the current shape with all the previous ones
-                    remove_threshold = 0.5
+                    remove_threshold = 0.75
                     current_shape_area = np.sum(masks[i,:])
                     # cut out the intersection area from the original mask
                     masks[i,:] = np.logical_and(masks[i,:], np.logical_not(current_mask))
@@ -234,5 +234,5 @@ if __name__ == '__main__':
         print(i)
         imgs, labels = dataset[i]
         print(labels)
-        # plot_save_dataset(path+str(i)+"_data.png", imgs, labels)
+        plot_save_dataset(path+str(i)+"_data.png", imgs, labels)
 

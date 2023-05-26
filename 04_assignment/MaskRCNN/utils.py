@@ -96,7 +96,7 @@ def plot_save_dataset(path, imgs, output):
 
     for i in range(1,cols):
         plt.subplot(1 ,cols ,i+1)
-        # plt.title("M)
+        plt.title("Label:"+str(labels[i-1].detach().numpy()))
         plt.axis("off")
         plt.imshow(masks[:,:,i-1])
 
