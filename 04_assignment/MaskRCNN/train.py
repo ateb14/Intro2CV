@@ -11,7 +11,7 @@ model = utils.get_instance_segmentation_model(num_classes).double()
 
 model.load_state_dict(torch.load(r'/Users/wangyiyang/code/Intro2CV/04_assignment/intro2cv_maskrcnn_pretrained.pth',map_location='cpu'))
 
-dataset = ShapeDataset(10)
+dataset = ShapeDataset(200)
 
 torch.manual_seed(233)
 
@@ -20,7 +20,7 @@ data_loader = torch.utils.data.DataLoader(
     collate_fn=utils.collate_fn)
 
 params = [p for p in model.parameters() if p.requires_grad]
-optimizer = torch.optim.SGD(params, lr=0.001,
+optimizer = torch.optim.SGD(params, lr=0.005,
                             momentum=0.9, weight_decay=0.0005)
 
 lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer,
