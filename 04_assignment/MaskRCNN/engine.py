@@ -3,18 +3,18 @@ import sys
 import utils
 import cv2
 
+
 def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
+    model.to(device)
     model.train()
     metric_logger = utils.MetricLogger(delimiter="  ")
-    metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
+    metric_logger.add_meter('lr', utils.SmoothedValue(
+        window_size=1, fmt='{value:.6f}'))
     header = 'Epoch: [{}]'.format(epoch)
-
-
 
     lr_scheduler = None
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
         images = list(image.to(device) for image in images)
-
 
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 

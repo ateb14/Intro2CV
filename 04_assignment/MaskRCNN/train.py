@@ -5,11 +5,14 @@ from dataset import ShapeDataset
 import torch
 import torch.utils.data
 
-num_classes = 4 # 0 for backgroud 
- 
+
+num_classes = 4  # 0 for backgroud
+
 model = utils.get_instance_segmentation_model(num_classes).double()
 
-model.load_state_dict(torch.load(r'/Users/wangyiyang/code/Intro2CV/04_assignment/intro2cv_maskrcnn_pretrained.pth',map_location='cpu'))
+# map
+model.load_state_dict(torch.load(
+    r'E:\Intro2CV\intro2cv_maskrcnn_pretrained.pth', map_location="cpu"))
 
 dataset = ShapeDataset(200)
 
@@ -28,11 +31,9 @@ lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer,
                                                gamma=0.1)
 
 num_epochs = 3
-device = torch.device('cpu')
-
+device = torch.device("cpu")
 
 
 for epoch in range(num_epochs):
     train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=1)
-    torch.save(model.state_dict(), "results/maskrcnn_"+str(epoch)+".pth") 
-    
+    torch.save(model.state_dict(), "results/maskrcnn_"+str(epoch)+".pth")
